@@ -1,0 +1,14 @@
+.gramster-logo-container {
+  width: fit-content;
+}
+.gramster-logo-container h1{
+  display: inline;
+}
+.gramster-logo-1 {
+  font-weight: 500;
+  color: var(--primary);
+}
+.gramster-logo-2 {
+  font-weight: 300;
+  color: var(--brighter-black);
+}

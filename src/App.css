@@ -1,0 +1,25 @@
+body {
+  background-color: var(--neutral-white);
+  
+  /* App Color Palette */
+  --primary: #E54B4B;
+  --secondary: #FF9585;
+
+  --white: #FFFFFF;
+  --neutral-white: #F5F5F5;
+  --darker-white: #EBEBEB;
+
+  --brighter-black: #4C4C47;
+  --neutral-black: #2D2D2A;
+  --black: #000000;
+
+  --neutral-success: #5C946E;
+  --neutral-warning: #F8C630;
+}
+
+.basic-card {
+  background-color: var(--white);
+  padding: 18px 15px;
+  border-radius: 8px;
+  box-shadow: 0px 3px 8px rgba(100, 100, 100, 0.1);
+}
