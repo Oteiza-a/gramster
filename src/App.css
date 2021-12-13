@@ -17,9 +17,37 @@ body {
   --neutral-warning: #F8C630;
 }
 
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--neutral-black);
+}
+
 .basic-card {
   background-color: var(--white);
   padding: 18px 15px;
   border-radius: 8px;
   box-shadow: 0px 3px 8px rgba(100, 100, 100, 0.1);
 }
+
+.basic-page-template {
+  margin: 25px auto 0px auto;
+  width: 90%;
+}
+
+
+@media screen and (min-width: 600px) {
+  .basic-page-template {
+    margin-top: 40px;
+    width: 80%;
+  }
+}
+
+/* 
+  MATERIAL UI BREAKPOINTS
+  xs, extra-small: 0px
+  sm, small: 600px
+  md, medium: 900px
+  lg, large: 1200px
+  xl, extra-large: 1536px 
+*/
