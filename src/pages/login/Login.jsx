@@ -13,9 +13,9 @@ export function Login() {
           <GramsterLogoText fontSize='40px' />
         </div>
 
-        <Separator verticalMargin='8px' />
+        <Separator verticalMargin='8px'/>
 
-        <div>Login</div>
+        <div>Sign up to your account</div>
 
       </div>
     </div>

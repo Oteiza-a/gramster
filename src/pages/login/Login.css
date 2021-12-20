@@ -1,5 +1,6 @@
 .login-page-conteiner {
-  background-color: var(--neutral-white);
+  background: linear-gradient(20deg, var(--primary) 0%, var(--secondary) 18%, var(--neutral-white) 78%);
+
   height: 100vh;
   display: flex;
   align-items: center;

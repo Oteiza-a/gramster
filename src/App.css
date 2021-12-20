@@ -1,9 +1,11 @@
 body {
+  /* App Color Palette */
   background-color: var(--neutral-white);
   
-  /* App Color Palette */
-  --primary: #E54B4B;
-  --secondary: #FF9585;
+  /* --primary: #E54B4B; */
+  --primary: #4B6CE5;
+  /* --secondary: #FF9585; */
+  --secondary: #85AAFF;
 
   --white: #FFFFFF;
   --neutral-white: #F5F5F5;
@@ -17,11 +19,27 @@ body {
   --neutral-warning: #F8C630;
 }
 
+/* TITLES & TEXTS */
+
 .title {
   font-size: 20px;
   font-weight: 500;
   color: var(--neutral-black);
 }
+
+.primary-text {
+  color: var(--primary);
+}
+
+.flex-text-wrapper {
+  display: flex;
+}
+
+.flex-text-wrapper div {
+  margin-right: 4px;
+}
+
+/* COMPONENTS */
 
 .basic-card {
   background-color: var(--white);
@@ -31,16 +49,21 @@ body {
 }
 
 .basic-page-template {
-  margin: 25px auto 0px auto;
+  margin: 0 auto;
+  padding-top: 25px;
   width: 90%;
 }
-
 
 @media screen and (min-width: 600px) {
   .basic-page-template {
     margin-top: 40px;
     width: 80%;
   }
+}
+
+/* FORMS */
+.MuiFilledInput-root {
+  background-color: #85AAFF50 !important;
 }
 
 /* 

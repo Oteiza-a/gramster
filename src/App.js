@@ -1,23 +1,27 @@
 import React from 'react';
-import './App.css';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes,Route } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+// Components
 import { Login } from './pages/login/Login' 
 import { Home } from './pages/home/Home' 
 import { Profile } from './pages/profile/Profile';
+import { SheetForm } from './pages/sheet-form/SheetForm';
 import { RedirectPage } from './Redirect';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+// Utils
+import { colorPalette } from './fixed-data/colorPalette'
+
+// CSS
+import './App.css';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#E54B4B',
+      main: colorPalette.primary,
     },
     secondary: {
-      main: '#FF9585',
+      main: colorPalette.secondary,
     },
   },
   typography: {
@@ -33,8 +37,9 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Login />} />
           <Route exact path='/home' element={<Home />} />
-          <Route path='/profile'  >
-            <Route path='' element={<Profile />}/>
+          <Route exact path='/sheet' element={<SheetForm />} />
+          <Route path='/profile' >
+            <Route path='' element={<Profile />} />
             <Route path=':userId' element={<Profile />}/>
           </Route>
           <Route exact path='*' element={<RedirectPage />} />
