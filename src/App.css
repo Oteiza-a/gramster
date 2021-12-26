@@ -63,7 +63,22 @@ body {
 
 /* FORMS */
 .MuiFilledInput-root {
-  background-color: #85AAFF50 !important;
+  background-color: #85AAFF30 !important;
+}
+
+.basic-input-spacing {
+  margin-top: 15px !important;
+}
+.radio-input-spacing {
+  margin-top: 20px !important;
+}
+
+.top-radio-spacing { 
+  margin-top: 8px !important;
+}
+
+.submit-button {
+  width: 100% !important;
 }
 
 /* 
