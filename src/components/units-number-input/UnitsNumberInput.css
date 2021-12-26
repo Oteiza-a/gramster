@@ -1,0 +1,11 @@
+.pair-inputs-container{ 
+  display: flex;
+  flex-wrap: nowrap;
+}
+.left-input {
+  flex: 3 3 auto !important;
+  padding-right: 10px !important;
+}
+.right-input {
+  width: 80px;
+}

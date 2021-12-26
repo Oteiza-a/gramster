@@ -1,29 +1,43 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 // Components
 import { TextField, Select, MenuItem, FormControl, InputLabel, RadioGroup, FormControlLabel, Radio, FormLabel, Button } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Separator } from '../../components/separator/Separator'
+import { BasicHeader } from '../../components/basic-header/BasicHeader';
+import { UnitsNumberInput } from '../../components/units-number-input/UnitsNumberInput';
 
 // Utils
 import { colorPalette } from '../../fixed-data/colorPalette'
 import { validateField, validateForm } from '../../utils/forms';
+import { unitsOfMeasurements } from '../../fixed-data/unitsOfMeasurements';
+
+// Icons
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 // CSS
 import './SheetForm.css'
 
 export function SheetForm() {
+  
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     sheetName: { value: '', error: false },
     sheetType: { value: '', error: false },
     hasLimit: { value: '', error: false },
     sheetLimit: { value: '', error: false, customValidation: (val) => val !== 0 },
+    sheetLimitUnit: { value: '', error: false },
   })
-  const requiredFields = [ 'sheetName', 'sheetType', 'hasLimit', 'sheetLimit']
+  const [units, setUnits] = useState([])
+  const [requiredFields, setRequiredFields] = useState(['sheetName', 'sheetType', 'hasLimit'])
 
   const handleFormChange = (fieldName, inputValue) => {
     let checkedField = form[fieldName]
+
+    if (!particularInstructions(fieldName, inputValue)) return
+
     checkedField.value = inputValue
     checkedField.error = !validateField(checkedField)
 
@@ -33,24 +47,57 @@ export function SheetForm() {
     })
   }
 
+  const particularInstructions = (fieldName, inputValue) => {
+    let isValid = true
+    if (fieldName === 'sheetType') selectUnit(inputValue)
+    if (fieldName === 'hasLimit') {
+      const modifiedFields = ['sheetLimit', 'sheetLimitUnit']
+      let newFields = []
+      if (inputValue) newFields = [...requiredFields, ... modifiedFields]
+      if (!inputValue) newFields = requiredFields.filter(field => !modifiedFields.includes(field))
+      setRequiredFields(newFields)
+    }
+
+    isValid = !(fieldName === 'sheetLimit' && inputValue < 0)
+
+    return isValid
+  }
+
   const submitSheetForm = () => {
     const formValidation = validateForm(requiredFields, form)
 
     if (formValidation === true) {
-      // FORM SUCCESS
+      alert('success')
     } else {
-      // CHECK ERRORS IN PARTICULAR FIELDS RETURN ED
+      const formChecked = {}
+
+      Object.keys(form).forEach((fieldName) => {
+        const fieldObj = form[fieldName]
+        if (formValidation.includes(fieldName)) fieldObj.error = true
+        formChecked[fieldName] = fieldObj
+      })
+
+      setForm(formChecked)
     }
+  }
+
+  const selectUnit = (unit) => {
+    setUnits(unitsOfMeasurements[unit])
+  }
+
+  const goBack = () => {
+    navigate(-1)
   }
 
   return (
     <div className='sheet-page-container'>
-      <div className='basic-page-template'>
+      <div className='form-page-template'>
 
-        <div className='flex-text-wrapper'>
-          <div className='title'>Create</div>
-          <div className='title primary-text'>New Sheet</div>
-        </div>
+        <BasicHeader 
+          whiteText='Create' 
+          secondText='New Sheet'
+          icon={<ArrowBackIosNewIcon onClick={goBack} fontSize='small' color={'primary'} />}
+        />
 
         <Separator color={colorPalette.darkerWhite} marginBottom='0px'/>
 
@@ -85,7 +132,7 @@ export function SheetForm() {
               <MenuItem value=''><em>Select a type</em></MenuItem>
               <MenuItem value={'grams'}>Kilos, Grams, milligrams (2kg, 500gr, 300mg)</MenuItem>
               <MenuItem value={'liters'}>Liters, Milliliters (2lt, 400ml)</MenuItem>
-              <MenuItem value={'proportions'}>Proportions (1/4, 1/2)</MenuItem>
+              <MenuItem value={'proportions'}>Portions (1/4, 1/2)</MenuItem>
             </Select>
           </FormControl>
 
@@ -110,23 +157,25 @@ export function SheetForm() {
 
           {/* SHEET LIMITS */}
           {form['hasLimit'].value
-            ? <TextField
-                value={form['sheetLimit'].value}
-                onChange={(e) => { handleFormChange('sheetLimit', e.target.value) }}
-                error={form['sheetLimit'].error}
-                className='top-radio-spacing'
-                variant='filled'
+            ? <UnitsNumberInput 
                 label='Determined Limit'
-                fullWidth={true}
-                type="number"
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                shrink
-                required
+                value={form['sheetLimit'].value}
+                handleInputChange={(e) => { handleFormChange('sheetLimit', e.target.value) }}
+                error={form['sheetLimit'].error}
+                
+                unitValue={form['sheetLimitUnit'].value}
+                handleUnitChange={(e) => { handleFormChange('sheetLimitUnit', e.target.value) } }
+                options={units}
+                unitError={form['sheetLimitUnit'].error}
+                
+                unitsLabel='Unit'
+                required={true} 
                 helperText="Can be changed later"
               />
             : ''
           }
 
+          {/* SUBMIT BTN */}
           <Button 
             onClick={submitSheetForm} 
             variant="contained"

@@ -33,6 +33,7 @@ body {
 
 .flex-text-wrapper {
   display: flex;
+  align-items: center;
 }
 
 .flex-text-wrapper div {
@@ -54,10 +55,27 @@ body {
   width: 90%;
 }
 
+.form-page-template {
+  margin: 0 auto;
+  padding-top: 25px;
+  width: 90%;
+}
+
 @media screen and (min-width: 600px) {
   .basic-page-template {
-    margin-top: 40px;
+    padding-top: 40px;
     width: 80%;
+  }
+
+  .form-page-template {
+    margin: 40px auto;
+    padding: 30px 25px;
+    width: 400px;
+
+    border: 1px solid var(--darker-white);
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(100, 100, 100, 0.1);
+
   }
 }
 

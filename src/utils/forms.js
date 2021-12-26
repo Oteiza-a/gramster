@@ -1,20 +1,19 @@
 export const validateForm = (requiredFields, formFields) => {
   const invalidFields = []
+  let isFormValid = true
 
-  const isFormValid = requiredFields.every(requiredField => {
+  requiredFields.forEach(requiredField => {
     const currentField = formFields[requiredField]
-    if (!currentField) return true
+    if (!currentField) return
 
     if (!(validateField(currentField))) {
       invalidFields.push(requiredField)
-      return false
+      isFormValid = false
     } 
-
-    return true
   })
 
   if (!isFormValid) return invalidFields
-  return false
+  return true
 }
 
 export const validateField = (field) => {
