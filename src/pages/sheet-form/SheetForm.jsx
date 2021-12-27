@@ -18,11 +18,15 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 // CSS
 import './SheetForm.css'
+import { LoadingOverlay } from '../../components/loading-overlay/LoadingOverlay';
 
 export function SheetForm() {
   
   const navigate = useNavigate();
 
+  const [units, setUnits] = useState([])
+  const [disableForm, setDisableForm] = useState(false)
+  const [requiredFields, setRequiredFields] = useState(['sheetName', 'sheetType', 'hasLimit'])
   const [form, setForm] = useState({
     sheetName: { value: '', error: false },
     sheetType: { value: '', error: false },
@@ -30,8 +34,6 @@ export function SheetForm() {
     sheetLimit: { value: '', error: false, customValidation: (val) => val !== 0 },
     sheetLimitUnit: { value: '', error: false },
   })
-  const [units, setUnits] = useState([])
-  const [requiredFields, setRequiredFields] = useState(['sheetName', 'sheetType', 'hasLimit'])
 
   const handleFormChange = (fieldName, inputValue) => {
     let checkedField = form[fieldName]
@@ -53,7 +55,7 @@ export function SheetForm() {
     if (fieldName === 'hasLimit') {
       const modifiedFields = ['sheetLimit', 'sheetLimitUnit']
       let newFields = []
-      if (inputValue) newFields = [...requiredFields, ... modifiedFields]
+      if (inputValue) newFields = [...requiredFields, ...modifiedFields]
       if (!inputValue) newFields = requiredFields.filter(field => !modifiedFields.includes(field))
       setRequiredFields(newFields)
     }
@@ -67,7 +69,7 @@ export function SheetForm() {
     const formValidation = validateForm(requiredFields, form)
 
     if (formValidation === true) {
-      alert('success')
+      setDisableForm(true)
     } else {
       const formChecked = {}
 
@@ -91,6 +93,9 @@ export function SheetForm() {
 
   return (
     <div className='sheet-page-container'>
+      
+      <LoadingOverlay loading={disableForm}/> 
+
       <div className='form-page-template'>
 
         <BasicHeader 
@@ -120,6 +125,7 @@ export function SheetForm() {
             required 
             error={form['sheetType'].error} 
             className='sheet-form-control basic-input-spacing'
+            fullWidth={true}
           >
             <InputLabel id='type'>Type</InputLabel>
             <Select 
@@ -130,7 +136,7 @@ export function SheetForm() {
               labelId='type'
             >
               <MenuItem value=''><em>Select a type</em></MenuItem>
-              <MenuItem value={'grams'}>Kilos, Grams, milligrams (2kg, 500gr, 300mg)</MenuItem>
+              <MenuItem value={'grams'}>Kilos, Grams, Milligrams (2kg, 500gr, 300mg)</MenuItem>
               <MenuItem value={'liters'}>Liters, Milliliters (2lt, 400ml)</MenuItem>
               <MenuItem value={'proportions'}>Portions (1/4, 1/2)</MenuItem>
             </Select>
@@ -142,6 +148,7 @@ export function SheetForm() {
             error={form['hasLimit'].error}
             className='sheet-form-control radio-input-spacing' 
             component="fieldset"
+            fullWidth={true}
           >
             <FormLabel component="legend">Sheet has determined limits</FormLabel>
             <RadioGroup
@@ -181,6 +188,7 @@ export function SheetForm() {
             variant="contained"
             className='basic-input-spacing submit-button'
             endIcon={<AddCircleOutlineIcon color='white'/>}
+            disabled={disableForm}
           >
             Create Sheet
           </Button>

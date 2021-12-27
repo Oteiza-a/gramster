@@ -1,0 +1,23 @@
+.loading-overlay-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+  background-color: #85AAFF50 !important;
+  transition: all 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.display-overlay {
+  opacity: 1;
+} 
+.hide-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+.overlay-loading {
+  position: fixed;
+}
