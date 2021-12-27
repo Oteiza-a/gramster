@@ -9,7 +9,7 @@ import { UnitsNumberInput } from '../../components/units-number-input/UnitsNumbe
 
 // Utils
 import { colorPalette } from '../../fixed-data/colorPalette'
-import { validateField, validateForm } from '../../utils/forms';
+import { validateField, validateForm } from '../../helpers/forms';
 import { unitsOfMeasurements } from '../../fixed-data/unitsOfMeasurements';
 
 // Icons

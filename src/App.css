@@ -17,6 +17,11 @@ body {
 
   --neutral-success: #5C946E;
   --neutral-warning: #F8C630;
+
+  margin: 0;
+  font-family: "Rubik", "Roboto", "Helvetica", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* TITLES & TEXTS */
@@ -87,6 +92,7 @@ body {
 .basic-input-spacing {
   margin-top: 15px !important;
 }
+ 
 .radio-input-spacing {
   margin-top: 20px !important;
 }
