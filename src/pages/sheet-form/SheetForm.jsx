@@ -6,6 +6,7 @@ import { TextField, Select, MenuItem, FormControl, InputLabel, RadioGroup, FormC
 import { Separator } from '../../components/separator/Separator'
 import { BasicHeader } from '../../components/basic-header/BasicHeader';
 import { UnitsNumberInput } from '../../components/units-number-input/UnitsNumberInput';
+import { LoadingOverlay } from '../../components/loading-overlay/LoadingOverlay';
 
 // Utils
 import { colorPalette } from '../../fixed-data/colorPalette'
@@ -18,7 +19,6 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 // CSS
 import './SheetForm.css'
-import { LoadingOverlay } from '../../components/loading-overlay/LoadingOverlay';
 
 export function SheetForm() {
   
@@ -83,19 +83,15 @@ export function SheetForm() {
     }
   }
 
-  const selectUnit = (unit) => {
-    setUnits(unitsOfMeasurements[unit])
-  }
+  const selectUnit = (unit) => setUnits(unitsOfMeasurements[unit])
 
-  const goBack = () => {
-    navigate(-1)
-  }
+  const goBack = () => navigate(-1)
 
   return (
     <div className='sheet-page-container'>
-      
-      <LoadingOverlay loading={disableForm}/> 
 
+      <LoadingOverlay loading={disableForm}/> 
+      
       <div className='form-page-template'>
 
         <BasicHeader 
