@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
+import Swal from '@sweetalert2/theme-material-ui';
 
 // Components
 import { TextField, Select, MenuItem, FormControl, InputLabel, RadioGroup, FormControlLabel, Radio, FormLabel, Button } from '@mui/material';
@@ -69,7 +70,12 @@ export function SheetForm() {
     const formValidation = validateForm(requiredFields, form)
 
     if (formValidation === true) {
-      setDisableForm(true)
+      // setDisableForm(true)
+      Swal.fire(
+        'The Internet?',
+        'That thing is still around?',
+        'question'
+      )      
     } else {
       const formChecked = {}
 
