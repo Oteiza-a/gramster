@@ -1,25 +1,25 @@
 export const validateForm = (requiredFields, formFields) => {
   const invalidFields = []
-  let isFormValid = true
 
   requiredFields.forEach(requiredField => {
     const currentField = formFields[requiredField]
     if (!currentField) return
-
-    if (!(validateField(currentField))) {
-      invalidFields.push(requiredField)
-      isFormValid = false
-    } 
+    if (!currentField.validationFunc(currentField.value)) invalidFields.push(requiredField)
   })
 
-  if (!isFormValid) return invalidFields
-  return true
+  return invalidFields
 }
 
-export const validateField = (field) => {
-  const { value } = field
-  const basicValidation = value !== undefined && value !== null && value !== ''
-  const customValidation = field.customValidation ? field.customValidation(field.value) : true
+export const requiredField = (val) => Boolean(val)
 
-  return basicValidation && customValidation
+export const isNumeric = (val) => /^\d+$/.test(val)
+
+export const isDefined = (val) => val !== undefined && val !== null && val !== ''
+
+export const isMoreThanZero = (val) => /^\d+$/.test(val) && val > 0
+
+export const parseFormToObj = (form) => {
+  const obj = {}
+  Object.keys(form).forEach(key => obj[key] = form[key].value)
+  return obj
 }

@@ -26,12 +26,10 @@ export function UnitsNumberInput({
         onChange={(e) => { handleInputChange(e) }}
         error={error}
         className='basic-input-spacing left-input'
-        variant='filled'
         label={label}
         fullWidth={true}
         type="number"
         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-        shrink
         required={required}
         helperText={helperText}
         
@@ -41,15 +39,14 @@ export function UnitsNumberInput({
         error={unitError} 
         className='basic-input-spacing right-input'
       >
-        <InputLabel id={unitsLabel}>{unitsLabel}</InputLabel>
-        <Select 
+        <TextField 
+          select
           value={unitValue}
           onChange={(e) => { handleUnitChange(e) }}
-          variant='filled'
-          labelId={unitsLabel}
+          label={unitsLabel}
         >
-          {options.map((option) => <MenuItem value={option.value}>{option.text}</MenuItem>)}
-        </Select>
+          {options.map((option, i) => <MenuItem value={option.value} key={i}>{option.text}</MenuItem>)}
+        </TextField>
       </FormControl>
 
 

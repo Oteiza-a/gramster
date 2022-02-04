@@ -5,7 +5,7 @@
   top: 0px;
   left: 0px;
   z-index: 100;
-  background-color: #85AAFF50 !important;
+  background-color: var(--transparent-primary);
   transition: all 0.5s;
   display: flex;
   justify-content: center;

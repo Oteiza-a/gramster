@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import Swal from '@sweetalert2/theme-material-ui';
 
 // Components
-import { TextField, Select, MenuItem, FormControl, InputLabel, RadioGroup, FormControlLabel, Radio, FormLabel, Button } from '@mui/material';
+import { TextField, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, FormLabel, Button } from '@mui/material';
 import { Separator } from '../../components/separator/Separator'
 import { BasicHeader } from '../../components/basic-header/BasicHeader';
 import { UnitsNumberInput } from '../../components/units-number-input/UnitsNumberInput';
 import { LoadingOverlay } from '../../components/loading-overlay/LoadingOverlay';
+import { ModalBase } from '../../components/modal-base/ModalBase';
+import { ModalDialog } from '../../components/modal-dialog/ModalDialog';
 
 // Utils
 import { colorPalette } from '../../fixed-data/colorPalette'
-import { validateField, validateForm } from '../../helpers/forms';
+import { isDefined, isMoreThanZero, parseFormToObj, requiredField, validateForm } from '../../helpers/forms';
 import { unitsOfMeasurements } from '../../fixed-data/unitsOfMeasurements';
 
 // Icons
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
+import HelpTwoToneIcon from '@mui/icons-material/HelpTwoTone';
 
 // CSS
 import './SheetForm.css'
@@ -25,33 +28,52 @@ export function SheetForm() {
   
   const navigate = useNavigate();
 
-  const [units, setUnits] = useState([])
+  const [units, setUnits] = useState([{ value: '', text: 'Select a type of measurement' }])
   const [disableForm, setDisableForm] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalDialog, setModalDialog] = useState({})
+  const [loadingOverlay, setLoadingOverlay] = useState(false)
   const [requiredFields, setRequiredFields] = useState(['sheetName', 'sheetType', 'hasLimit'])
   const [form, setForm] = useState({
-    sheetName: { value: '', error: false },
-    sheetType: { value: '', error: false },
-    hasLimit: { value: '', error: false },
-    sheetLimit: { value: '', error: false, customValidation: (val) => val !== 0 },
-    sheetLimitUnit: { value: '', error: false },
+    sheetName: { value: '', validationFunc: requiredField, error: false, render: true },
+    sheetType: { value: '', validationFunc: requiredField, error: false, render: true },
+    hasLimit: { value: '', validationFunc: isDefined, error: false, render: true },
+    sheetLimit: { value: '', validationFunc: (val) => requiredField(val) && isMoreThanZero(val), error: false, render: true },
+    sheetLimitUnit: { value: '', validationFunc: requiredField, error: false, render: true },
   })
+  const confirmDialog = {
+    icon: <HelpTwoToneIcon color='primary' fontSize='inherit'/>,
+    title: 'Confirmation',
+    text: 'Do you want to confirm the sheet?',
+    acceptButtonText: 'Confirm',
+    rejectButtonText: 'Cancel',
+    acceptButtonCallback: () => { setModalOpen(false); setLoadingOverlay(true); createSheet(); },
+    rejectButtonCallback: () => { setModalOpen(false) },
+  }
+
+  const successDialog = {
+    icon: <CheckCircleTwoToneIcon color='success' fontSize='inherit' />,
+    title: 'Success',
+    text: 'The sheet has been generated successfully.',
+    acceptButtonText: 'Ok',
+    acceptButtonCallback: () => { setModalOpen(false) },
+  }
 
   const handleFormChange = (fieldName, inputValue) => {
-    let checkedField = form[fieldName]
+    let field = form[fieldName]
+    
+    field.value = inputValue
+    field.error = !field.validationFunc(inputValue)
 
-    if (!particularInstructions(fieldName, inputValue)) return
-
-    checkedField.value = inputValue
-    checkedField.error = !validateField(checkedField)
-
+    specificInstructions(fieldName, inputValue)
+    
     setForm({
       ...form,
-      [fieldName]: checkedField
+      [fieldName]: field,
     })
   }
 
-  const particularInstructions = (fieldName, inputValue) => {
-    let isValid = true
+  const specificInstructions = (fieldName, inputValue) => {
     if (fieldName === 'sheetType') selectUnit(inputValue)
     if (fieldName === 'hasLimit') {
       const modifiedFields = ['sheetLimit', 'sheetLimitUnit']
@@ -60,33 +82,31 @@ export function SheetForm() {
       if (!inputValue) newFields = requiredFields.filter(field => !modifiedFields.includes(field))
       setRequiredFields(newFields)
     }
-
-    isValid = !(fieldName === 'sheetLimit' && inputValue < 0)
-
-    return isValid
   }
 
   const submitSheetForm = () => {
-    const formValidation = validateForm(requiredFields, form)
+    const invalidFields = validateForm(requiredFields, form)
+    
+    if (invalidFields && invalidFields.length === 0) {
+      setModalDialog(confirmDialog)
+      setModalOpen(true)
 
-    if (formValidation === true) {
-      // setDisableForm(true)
-      Swal.fire(
-        'The Internet?',
-        'That thing is still around?',
-        'question'
-      )      
     } else {
       const formChecked = {}
 
       Object.keys(form).forEach((fieldName) => {
         const fieldObj = form[fieldName]
-        if (formValidation.includes(fieldName)) fieldObj.error = true
+        if (invalidFields.includes(fieldName)) fieldObj.error = true
         formChecked[fieldName] = fieldObj
       })
 
       setForm(formChecked)
     }
+  }
+
+  const createSheet = () => {
+    const sheetObj = parseFormToObj(form)
+    console.log(sheetObj)
   }
 
   const selectUnit = (unit) => setUnits(unitsOfMeasurements[unit])
@@ -96,8 +116,14 @@ export function SheetForm() {
   return (
     <div className='sheet-page-container'>
 
-      <LoadingOverlay loading={disableForm}/> 
-      
+      <LoadingOverlay loading={loadingOverlay}/> 
+
+      <ModalBase isOpen={modalOpen}>
+        <ModalDialog 
+          {...modalDialog}
+        />
+      </ModalBase>
+
       <div className='form-page-template'>
 
         <BasicHeader 
@@ -116,7 +142,6 @@ export function SheetForm() {
             onChange={(e) => { handleFormChange('sheetName', e.target.value) }}
             error={form['sheetName'].error}
             className='basic-input-spacing'
-            variant='filled'
             label='Sheet Name'
             fullWidth={true}
             required
@@ -125,32 +150,30 @@ export function SheetForm() {
           {/* SHEET TYPE */}
           <FormControl 
             required 
-            error={form['sheetType'].error} 
             className='sheet-form-control basic-input-spacing'
             fullWidth={true}
           >
-            <InputLabel id='type'>Type</InputLabel>
-            <Select 
+            <TextField 
+              select
               value={form['sheetType'].value}
               onChange={(e) => { handleFormChange('sheetType', e.target.value) }}
-              
-              variant='filled'
-              labelId='type'
+              error={form['sheetType'].error} 
+              label='Type'
             >
               <MenuItem value=''><em>Select a type</em></MenuItem>
               <MenuItem value={'grams'}>Kilos, Grams, Milligrams (2kg, 500gr, 300mg)</MenuItem>
               <MenuItem value={'liters'}>Liters, Milliliters (2lt, 400ml)</MenuItem>
               <MenuItem value={'proportions'}>Portions (1/4, 1/2)</MenuItem>
-            </Select>
+            </TextField>
           </FormControl>
 
           {/* SHEET HAS LIMITS */}
           <FormControl 
             required
-            error={form['hasLimit'].error}
             className='sheet-form-control radio-input-spacing' 
             component="fieldset"
             fullWidth={true}
+            error={form['hasLimit'].error}
           >
             <FormLabel component="legend">Sheet has determined limits</FormLabel>
             <RadioGroup
@@ -198,7 +221,6 @@ export function SheetForm() {
           <Separator color={colorPalette.darkerWhite} marginTop='20px'/>
 
         </div>
-
       </div>
     </div>
   );

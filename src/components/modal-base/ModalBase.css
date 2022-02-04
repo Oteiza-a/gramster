@@ -1,0 +1,41 @@
+.modal-background {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--transparent-primary);
+  transition: all 0.3s;
+}
+.modal-card {
+  width: 80%;
+  min-height: 100px;
+  height: fit-content;
+  z-index: 100;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s;
+}
+.background-open {
+  opacity: 1;
+}
+.background-closed {
+  opacity: 0;
+  pointer-events: none;
+}
+.modal-open {
+  transform: scale(1);
+}
+.modal-closed {
+  transform: scale(0.6);
+}
+@media screen and (min-width: 500px) {
+  .modal-card {
+    width: 370px;
+  }
+}

@@ -18,6 +18,8 @@ body {
   --neutral-success: #5C946E;
   --neutral-warning: #F8C630;
 
+  --transparent-primary: #4B6CE560;
+
   margin: 0;
   font-family: "Rubik", "Roboto", "Helvetica", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -30,6 +32,14 @@ body {
   font-size: 20px;
   font-weight: 500;
   color: var(--neutral-black);
+  margin: 0px;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--neutral-black);
+  margin: 0px;
 }
 
 .primary-text {
