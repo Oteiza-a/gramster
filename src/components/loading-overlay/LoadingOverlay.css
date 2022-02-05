@@ -18,6 +18,3 @@
   opacity: 0;
   pointer-events: none;
 }
-.overlay-loading {
-  position: fixed;
-}

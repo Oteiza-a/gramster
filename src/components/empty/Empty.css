@@ -1,0 +1,13 @@
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.empty-icon-container {
+  font-size: 65px;
+  margin-bottom: 8px;
+}
+.empty-text {
+  color: var(--neutral-gray);
+}

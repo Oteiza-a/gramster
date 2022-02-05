@@ -1,0 +1,29 @@
+.home-page-container {
+  width: 100%;
+  padding-top: 20px;
+  height: 100vh;
+  background-color: var(--neutral-white);
+}
+.home-page-header {
+  width: 100% !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo-container {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.spinner-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+}
+.sheets-section {
+  margin-top: 15px;
+}

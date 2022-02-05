@@ -10,6 +10,14 @@ export const validateForm = (requiredFields, formFields) => {
   return invalidFields
 }
 
+export const isFormValid = (requiredFields, formFields) => {
+  return !requiredFields.every(requiredField => {
+    const currentField = formFields[requiredField]
+    if (!currentField) return false
+    return currentField.validationFunc(currentField.value)
+  })
+}
+
 export const requiredField = (val) => Boolean(val)
 
 export const isNumeric = (val) => /^\d+$/.test(val)

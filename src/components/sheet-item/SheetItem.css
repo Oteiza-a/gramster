@@ -1,0 +1,21 @@
+.sheet-item-container {
+  width: 100%;
+  padding: 15px 0px;
+}
+.sheet-icon-container {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+.sheet-name-container {
+
+}
+.sheet-type-container {
+
+}
+.sheet-arrow-icon-size {
+  font-size: 22px !important;
+}
+.sheet-show-icon-size {
+  font-size: 28px !important;
+}

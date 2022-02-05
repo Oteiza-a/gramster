@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Components
 import { Login } from './pages/login/Login' 
-import { Home } from './pages/home/Home' 
+import { SheetsIndex } from './pages/sheets-index/SheetsIndex' 
 import { Profile } from './pages/profile/Profile';
 import { SheetForm } from './pages/sheet-form/SheetForm';
 import { RedirectPage } from './pages/redirect/Redirect';
@@ -36,8 +36,8 @@ function App() {
       <Router>
         <Routes>
           <Route exact path='/' element={<Login />} />
-          <Route exact path='/home' element={<Home />} />
-          <Route exact path='/sheet' element={<SheetForm />} />
+          <Route exact path='/sheets/index' element={<SheetsIndex />} />
+          <Route exact path='/sheets/form' element={<SheetForm />} />
           <Route path='/profile' >
             <Route path='' element={<Profile />} />
             <Route path=':userId' element={<Profile />}/>

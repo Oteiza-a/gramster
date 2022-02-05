@@ -11,6 +11,8 @@ body {
   --neutral-white: #F5F5F5;
   --darker-white: #EBEBEB;
 
+  --neutral-gray: #777777;
+
   --brighter-black: #4C4C47;
   --neutral-black: #2D2D2A;
   --black: #000000;
@@ -31,14 +33,33 @@ body {
 .title {
   font-size: 20px;
   font-weight: 500;
-  color: var(--neutral-black);
-  margin: 0px;
+  color: var(--brighter-black);
+  margin: 0px 0px 5px 0px;
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--brighter-black);
+  margin: 0px 0px 5px 0px;
 }
 
 .text {
   font-size: 14px;
   font-weight: 300;
-  color: var(--neutral-black);
+  color: var(--brighter-black);
+  margin: 0px;
+}
+
+.s-bold {
+  font-weight: 500;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.no-m {
   margin: 0px;
 }
 
@@ -76,6 +97,12 @@ body {
   width: 90%;
 }
 
+.medium-page-template {
+  margin: 0 auto;
+  padding-top: 0px;
+  width: 90%;
+}
+
 @media screen and (min-width: 600px) {
   .basic-page-template {
     padding-top: 40px;
@@ -86,6 +113,18 @@ body {
     margin: 0px auto;
     padding: 30px 25px;
     width: 400px;
+
+    border: 1px solid var(--darker-white);
+    border-radius: 8px;
+    box-shadow: 0px 3px 8px rgba(100, 100, 100, 0.1);
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .medium-page-template {
+    margin: 0px auto;
+    padding: 30px 25px;
+    width: 600px;
 
     border: 1px solid var(--darker-white);
     border-radius: 8px;

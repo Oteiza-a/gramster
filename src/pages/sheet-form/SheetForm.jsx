@@ -12,7 +12,7 @@ import { ModalDialog } from '../../components/modal-dialog/ModalDialog';
 
 // Utils
 import { colorPalette } from '../../fixed-data/colorPalette'
-import { isDefined, isMoreThanZero, parseFormToObj, requiredField, validateForm } from '../../helpers/forms';
+import { isDefined, isFormValid, isMoreThanZero, parseFormToObj, requiredField, validateForm } from '../../helpers/forms';
 import { unitsOfMeasurements } from '../../fixed-data/unitsOfMeasurements';
 
 // Icons
@@ -20,6 +20,10 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
 import HelpTwoToneIcon from '@mui/icons-material/HelpTwoTone';
+import ErrorTwoToneIcon from '@mui/icons-material/ErrorTwoTone';
+
+// Clients
+import { postSheet } from '../../clients/sheets';
 
 // CSS
 import './SheetForm.css'
@@ -29,17 +33,16 @@ export function SheetForm() {
   const navigate = useNavigate();
 
   const [units, setUnits] = useState([{ value: '', text: 'Select a type of measurement' }])
-  const [disableForm, setDisableForm] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalDialog, setModalDialog] = useState({})
   const [loadingOverlay, setLoadingOverlay] = useState(false)
-  const [requiredFields, setRequiredFields] = useState(['sheetName', 'sheetType', 'hasLimit'])
+  const [requiredFields, setRequiredFields] = useState(['name', 'type', 'hasLimit'])
   const [form, setForm] = useState({
-    sheetName: { value: '', validationFunc: requiredField, error: false, render: true },
-    sheetType: { value: '', validationFunc: requiredField, error: false, render: true },
+    name: { value: '', validationFunc: requiredField, error: false, render: true },
+    type: { value: '', validationFunc: requiredField, error: false, render: true },
     hasLimit: { value: '', validationFunc: isDefined, error: false, render: true },
-    sheetLimit: { value: '', validationFunc: (val) => requiredField(val) && isMoreThanZero(val), error: false, render: true },
-    sheetLimitUnit: { value: '', validationFunc: requiredField, error: false, render: true },
+    limit: { value: '', validationFunc: (val) => requiredField(val) && isMoreThanZero(val), error: false, render: true },
+    limitUnit: { value: '', validationFunc: requiredField, error: false, render: true },
   })
   const confirmDialog = {
     icon: <HelpTwoToneIcon color='primary' fontSize='inherit'/>,
@@ -55,6 +58,14 @@ export function SheetForm() {
     icon: <CheckCircleTwoToneIcon color='success' fontSize='inherit' />,
     title: 'Success',
     text: 'The sheet has been generated successfully.',
+    acceptButtonText: 'Ok',
+    acceptButtonCallback: () => { navigate('/sheets/index') },
+  }
+
+  const errorDialog = {
+    icon: <ErrorTwoToneIcon color='error' fontSize='inherit' />,
+    title: 'Oops!',
+    text: 'There has been a problem generating the sheet, try again.',
     acceptButtonText: 'Ok',
     acceptButtonCallback: () => { setModalOpen(false) },
   }
@@ -74,9 +85,9 @@ export function SheetForm() {
   }
 
   const specificInstructions = (fieldName, inputValue) => {
-    if (fieldName === 'sheetType') selectUnit(inputValue)
+    if (fieldName === 'type') selectUnit(inputValue)
     if (fieldName === 'hasLimit') {
-      const modifiedFields = ['sheetLimit', 'sheetLimitUnit']
+      const modifiedFields = ['limit', 'limitUnit']
       let newFields = []
       if (inputValue) newFields = [...requiredFields, ...modifiedFields]
       if (!inputValue) newFields = requiredFields.filter(field => !modifiedFields.includes(field))
@@ -104,9 +115,18 @@ export function SheetForm() {
     }
   }
 
-  const createSheet = () => {
+  const createSheet = async () => {
     const sheetObj = parseFormToObj(form)
-    console.log(sheetObj)
+
+    const resData = await postSheet(sheetObj)
+    if (resData) {
+      setModalDialog(successDialog)
+    } else {
+      setModalDialog(errorDialog)
+    }
+    
+    setLoadingOverlay(false)
+    setModalOpen(true)
   }
 
   const selectUnit = (unit) => setUnits(unitsOfMeasurements[unit])
@@ -116,7 +136,7 @@ export function SheetForm() {
   return (
     <div className='sheet-page-container'>
 
-      <LoadingOverlay loading={loadingOverlay}/> 
+      <LoadingOverlay loading={loadingOverlay} /> 
 
       <ModalBase isOpen={modalOpen}>
         <ModalDialog 
@@ -138,9 +158,9 @@ export function SheetForm() {
 
           {/* SHEET NAME */}
           <TextField
-            value={form['sheetName'].value}
-            onChange={(e) => { handleFormChange('sheetName', e.target.value) }}
-            error={form['sheetName'].error}
+            value={form['name'].value}
+            onChange={(e) => { handleFormChange('name', e.target.value) }}
+            error={form['name'].error}
             className='basic-input-spacing'
             label='Sheet Name'
             fullWidth={true}
@@ -155,9 +175,9 @@ export function SheetForm() {
           >
             <TextField 
               select
-              value={form['sheetType'].value}
-              onChange={(e) => { handleFormChange('sheetType', e.target.value) }}
-              error={form['sheetType'].error} 
+              value={form['type'].value}
+              onChange={(e) => { handleFormChange('type', e.target.value) }}
+              error={form['type'].error} 
               label='Type'
             >
               <MenuItem value=''><em>Select a type</em></MenuItem>
@@ -175,15 +195,15 @@ export function SheetForm() {
             fullWidth={true}
             error={form['hasLimit'].error}
           >
-            <FormLabel component="legend">Sheet has determined limits</FormLabel>
+            <FormLabel component="legend" >Sheet has determined limits</FormLabel>
             <RadioGroup
               value={form['hasLimit'].value}
               onChange={(e) => { handleFormChange('hasLimit', e.target.value === 'true' ? true : false)}}
               name="radio-buttons-group"
               row
             >
-              <FormControlLabel value={true} control={<Radio />} label="Yes" />
-              <FormControlLabel value={false} control={<Radio />} label="No" />
+              <FormControlLabel value={true} control={<Radio />} label="Yes" className='text'/>
+              <FormControlLabel value={false} control={<Radio />} label="No" className='text'/>
             </RadioGroup>
           </FormControl>
 
@@ -191,14 +211,14 @@ export function SheetForm() {
           {form['hasLimit'].value
             ? <UnitsNumberInput 
                 label='Determined Limit'
-                value={form['sheetLimit'].value}
-                handleInputChange={(e) => { handleFormChange('sheetLimit', e.target.value) }}
-                error={form['sheetLimit'].error}
+                value={form['limit'].value}
+                handleInputChange={(e) => { handleFormChange('limit', e.target.value) }}
+                error={form['limit'].error}
                 
-                unitValue={form['sheetLimitUnit'].value}
-                handleUnitChange={(e) => { handleFormChange('sheetLimitUnit', e.target.value) } }
+                unitValue={form['limitUnit'].value}
+                handleUnitChange={(e) => { handleFormChange('limitUnit', e.target.value) } }
                 options={units}
-                unitError={form['sheetLimitUnit'].error}
+                unitError={form['limitUnit'].error}
                 
                 unitsLabel='Unit'
                 required={true} 
@@ -213,7 +233,7 @@ export function SheetForm() {
             variant="contained"
             className='basic-input-spacing submit-button'
             endIcon={<AddCircleOutlineIcon color='white'/>}
-            disabled={disableForm}
+            disabled={isFormValid(requiredFields, form)}
           >
             Create Sheet
           </Button>
