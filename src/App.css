@@ -95,12 +95,14 @@ body {
   margin: 0 auto;
   padding-top: 0px;
   width: 90%;
+  background-color: var(--neutral-white);
 }
 
 .medium-page-template {
   margin: 0 auto;
   padding-top: 0px;
   width: 90%;
+  background-color: var(--neutral-white);
 }
 
 @media screen and (min-width: 600px) {

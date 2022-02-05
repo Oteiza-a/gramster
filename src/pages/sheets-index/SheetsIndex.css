@@ -2,7 +2,7 @@
   width: 100%;
   padding-top: 20px;
   height: 100vh;
-  background-color: var(--neutral-white);
+  background-color: var(--darker-white);
 }
 .home-page-header {
   width: 100% !important;
